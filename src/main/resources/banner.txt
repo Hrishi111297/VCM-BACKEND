@@ -1,0 +1,9 @@
+ _   _ _____ ___  ___
+| | | /  __ \|  \/  |
+| | | | /  \/| .  . |
+| | | | |    | |\/| |
+\ \_/ / \__/\| |  | |
+ \___/ \____/\_|  |_/
+Welcome to ${spring.application.name}!
+Version: ${application.version}
+Running on Java: ${java.version} and OS: ${os.name}
