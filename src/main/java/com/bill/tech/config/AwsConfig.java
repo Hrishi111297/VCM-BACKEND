@@ -1,7 +1,5 @@
-
 package com.bill.tech.config;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -11,38 +9,47 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.bill.tech.payload.request.KeyValueDto;
-import com.bill.tech.service.KeyValueService;
-import static com.bill.tech.enums.ApiResponse. *;
+import com.bill.tech.entity.KeyValue;
+import com.bill.tech.repository.KeyValueRepo;
+import com.bill.tech.util.KeyValueStore;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
 public class AwsConfig {
 
-    private final KeyValueService keyValueService;
+    private final KeyValueRepo keyValueRepo;
 
-    @SuppressWarnings("unchecked")
-	public List<KeyValueDto> getAllValues() {
-        if (keyValueService.getAll().getBody() != null && keyValueService.getAll().getBody().get(DATA) != null) {
-            return (List<KeyValueDto>) keyValueService.getAll().getBody().get(DATA);
-        }
-        return Collections.emptyList(); 
-    }
-
+    public List<KeyValue> getAllValues() {
+    	if(keyValueRepo.count()!=0)
+    		return keyValueRepo.findAll();
+			return null;
+ }
 
     @Bean
-    public AmazonS3 amazonS3() {
-        List<KeyValueDto> keyValuePairs = getAllValues();
-        String accessKey = keyValuePairs.stream().filter(kv -> "access-key".equals(kv.getKey())).findFirst().map(KeyValueDto::getValue).orElse("");
-        String secretKey = keyValuePairs.stream().filter(kv -> "secret-key".equals(kv.getKey())).findFirst().map(KeyValueDto::getValue).orElse("");
-        String region = keyValuePairs.stream().filter(kv -> "region".equals(kv.getKey())).findFirst().map(KeyValueDto::getValue).orElse("us-east-1");
-        String bucket_name = keyValuePairs.stream().filter(kv -> "region".equals(kv.getKey())).findFirst().map(KeyValueDto::getValue).orElse("us-east-1");
+    KeyValueStore keyValueStore() {
+        List<KeyValue> keyValuePairs = getAllValues();
+        return new KeyValueStore(
+            keyValuePairs.stream().filter(kv -> "access-key".equals(kv.getKey())).findFirst().map(KeyValue::getValue).orElse(""),
+            keyValuePairs.stream().filter(kv -> "secret-key".equals(kv.getKey())).findFirst().map(KeyValue::getValue).orElse(""),
+            keyValuePairs.stream().filter(kv -> "region".equals(kv.getKey())).findFirst().map(KeyValue::getValue).orElse("us-east-1"),
+            keyValuePairs.stream().filter(kv -> "bucket.name".equals(kv.getKey())).findFirst().map(KeyValue::getValue).orElse("")
+        );
+    }
 
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+    @Bean
+    AmazonS3 amazonS3(KeyValueStore keyValueStore) {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(keyValueStore.getAccessKey(), keyValueStore.getSecretKey());
         return AmazonS3ClientBuilder.standard()
-                .withRegion(region)
+                .withRegion(keyValueStore.getRegion())
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .build();
     }
+    @Bean
+    public String bucketName(KeyValueStore keyValueStore) {
+        return keyValueStore.getBucketName(); // Provide bucket name as a bean
+    }
 }
+
+

@@ -4,6 +4,9 @@ package com.bill.tech.payload.request;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
@@ -35,7 +38,7 @@ public class CourseDto {
     @NotNull(message = "Duration cannot be null")
     @Min(value = 1, message = "Duration must be at least 1 month")
     private Integer duration;  // Duration in hours/days or months, depending on your need
-   
+   @JsonProperty(access = Access.WRITE_ONLY)
     private byte[] image;  // Image data as bytes, can be set in the service layer or controller
 
     @NotNull(message = "Status cannot be null")

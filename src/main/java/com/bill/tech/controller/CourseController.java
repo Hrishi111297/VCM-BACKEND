@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RequestMapping(COURSE)
-public class Course {
+public class CourseController{
 	@Autowired
 	private ObjectMapper objectMapper;
 	private final CourseService courseService;
@@ -49,8 +49,9 @@ public class Course {
 
 	@PutMapping(UPDATE_COURSE)
 	public ResponseEntity<EnumMap<ApiResponse, Object>> updateCourse(@PathVariable Long id,
-			@RequestPart("course") CourseDto courseDto, @RequestPart("image") MultipartFile image) throws IOException {
-		return courseService.updateCourse(id, courseDto, image);
+			@RequestParam("course") String data,
+			@RequestParam("image") MultipartFile image) throws IOException {
+		return courseService.updateCourse(id,  objectMapper.readValue(data, CourseDto.class), image);
 	}
 
 	@DeleteMapping(DELETE_COURSE)

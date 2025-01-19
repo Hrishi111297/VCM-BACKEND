@@ -70,4 +70,12 @@ public static final String DELETE_KEY_VALUE = SEPERATOR + "delete-Key_value/{id}
 public static final String GET__KEY_VALUE= SEPERATOR + "get-Key_value/{key}";
 public static final String GET_KEY_VALUE_ALL = SEPERATOR + "get-all-Key-values";
 
+//AWS
+public static final String AWS_BUCKET = BASE + "AWS-Bucket" + SEPERATOR;
+public static final String UPLOAD = SEPERATOR + "upload";
+public static final String DOWNLOAD = SEPERATOR + "download/{fileName}";
+public static final String AWS_LIST= SEPERATOR + "list";
+public static final String DELETE_FILENAME = SEPERATOR + "delete/{fileName}";
+public static final String DELETE_ALL = SEPERATOR + "delete-all";
+
 }

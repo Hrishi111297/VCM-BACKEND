@@ -4,6 +4,7 @@ import static com.bill.tech.constants.FileTypes.COURSE_BANNER;
 import static com.bill.tech.constants.FileTypes.IMAGE;
 import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE;
 import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE_DTO;
+import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE_DTOS;
 import static com.bill.tech.enums.ApiResponse.DATA;
 import static com.bill.tech.enums.ApiResponse.MESSAGE;
 import static com.bill.tech.enums.ApiResponse.SUCCESS;
@@ -26,10 +27,10 @@ import com.bill.tech.payload.request.CourseDto;
 import com.bill.tech.repository.CategoryRepo;
 import com.bill.tech.repository.CourseRepo;
 import com.bill.tech.service.CourseService;
-import com.bill.tech.util.AmazonBucketService;
 import com.bill.tech.util.FileUploadUtil;
 
 import lombok.RequiredArgsConstructor;
+
 
 @RequiredArgsConstructor
 @Service
@@ -37,7 +38,7 @@ public class CourseServiceImpl implements CourseService {
 
 	private final CourseRepo courseRepo;
 	private final CategoryRepo categoryRepo;
-	private final AmazonBucketService amazonBucketService;
+//	private final AmazonBucketService amazonBucketService;
 
 	@Override
 	public ResponseEntity<EnumMap<ApiResponse, Object>> createCourse(MultipartFile image, CourseDto courseDto)
@@ -47,8 +48,8 @@ public class CourseServiceImpl implements CourseService {
 		Document document = FileUploadUtil.uploadFile(image, IMAGE, COURSE_BANNER);
 		courseDto.setImage(document.getData());
 		
-		  String imageUrl = amazonBucketService.uploadFile(image);
-		  courseDto.setImageUrl(imageUrl);
+	//	  String imageUrl = amazonBucketService.uploadFile(image);
+	//	  courseDto.setImageUrl(imageUrl);
 		Course course = TO_COURSE.apply(courseDto).orElseThrow(() -> new ResourceNotFound("Course"));
 		Category category = categoryRepo.findById(courseDto.getCategoryId())
 				.orElseThrow(() -> new ResourceNotFound("Category", "Id", String.valueOf(courseDto.getCategoryId())));
@@ -88,7 +89,9 @@ public class CourseServiceImpl implements CourseService {
 		existingCourse.setStartDate(courseDto.getStartDate());
 		existingCourse.setEndDate(courseDto.getEndDate());
 		existingCourse.setImage(courseDto.getImage());
-		
+	//	amazonBucketService.deleteFileByUrl(existingCourse.getImageUrl());
+	//  String imageUrl = amazonBucketService.uploadFile(image);
+		//  existingCourse.setImageUrl(imageUrl);
 		Course updatedCourse = courseRepo.save(existingCourse);
 		responseMap.put(DATA, TO_COURSE_DTO.apply(updatedCourse));
 		responseMap.put(MESSAGE, "Course Updated Successfully");
@@ -111,7 +114,7 @@ public class CourseServiceImpl implements CourseService {
 	public ResponseEntity<EnumMap<ApiResponse, Object>> getCourse(Long id) {
 		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
 		Course course = courseRepo.findById(id).orElseThrow(() -> new ResourceNotFound("Course", "id", id.toString()));
-		responseMap.put(DATA, course);
+		responseMap.put(DATA, TO_COURSE_DTO.apply(course));
 		responseMap.put(SUCCESS, true);
 		return new ResponseEntity<>(responseMap, HttpStatus.OK);
 	}
@@ -121,7 +124,7 @@ public class CourseServiceImpl implements CourseService {
 		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
 		List<Course> courses = courseRepo.findAll();
 
-		responseMap.put(DATA, courses);
+		responseMap.put(DATA, TO_COURSE_DTOS.apply(courses));
 		responseMap.put(SUCCESS, true);
 
 		return new ResponseEntity<>(responseMap, HttpStatus.OK);
@@ -137,7 +140,7 @@ public class CourseServiceImpl implements CourseService {
 			responseMap.put(MESSAGE, "No courses found for the given category");
 			responseMap.put(SUCCESS, false);
 		} else {
-			responseMap.put(DATA, courses);
+			responseMap.put(DATA, TO_COURSE_DTOS.apply(courses));
 			responseMap.put(SUCCESS, true);
 		}
 
@@ -154,7 +157,7 @@ public class CourseServiceImpl implements CourseService {
 			responseMap.put(MESSAGE, "No courses found for the given status");
 			responseMap.put(SUCCESS, false);
 		} else {
-			responseMap.put(DATA, courses);
+			responseMap.put(DATA, TO_COURSE_DTOS.apply(courses));
 			responseMap.put(SUCCESS, true);
 		}
 
