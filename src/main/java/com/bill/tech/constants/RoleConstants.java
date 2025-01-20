@@ -12,6 +12,8 @@ public class RoleConstants {
 	public static final String VCM_STUDENT = "STUDENT";
 
 	public static final String VCM_SUPER_ADMIN = "SUPER_ADMIN";
+	
+	public static final String VCM_TEACHER = "VCM_TEACHER";
 
 	public static final String HAS_AUTORITY = "hasAuthority('";
 

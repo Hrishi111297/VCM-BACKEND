@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bill.tech.enums.ApiResponse;
 import com.bill.tech.payload.request.CategoryDto;
 import com.bill.tech.service.CategoryService;
+import com.bill.tech.util.AuditAwareUtil;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 public class Category {
     private final CategoryService categoryService;
-	
+	private final AuditAwareUtil auditAwareUtil;
     @PostMapping(CREATE_CATEGORY)
     public ResponseEntity<EnumMap<ApiResponse, Object>> createCategory(@RequestBody CategoryDto categoryDto) {
         return categoryService.addCategory(categoryDto);

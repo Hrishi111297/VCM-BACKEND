@@ -1,17 +1,22 @@
 package com.bill.tech.entity;
 
+import static java.util.Objects.nonNull;
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+import static com.bill.tech.constants.SchedularConstant.INDIA_ZONE;
+import static java.time.LocalDateTime.now;
+import static java.time.ZoneId.of;
+import static java.time.ZoneId.systemDefault;
+import static java.util.Objects.nonNull;
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +29,6 @@ import lombok.Setter;
 @Embeddable
 @MappedSuperclass
 public class Auditable implements Serializable {
-	/**
-	 * 
-	 */
 	private static final Long serialVersionUID = -4307510146029602159L;
 
 	@Column(name = "created_by", nullable = true, updatable = true)
@@ -46,43 +48,40 @@ public class Auditable implements Serializable {
 
 	@Column(name = "deleted_date", columnDefinition = "TIMESTAMP")
 	private LocalDateTime deletedDate;
+	
+	
 
 	@PrePersist
 	public void beforePersist() {
-		/*
-		 * HttpServletRequest request = ((ServletRequestAttributes)
-		 * RequestContextHolder.getRequestAttributes()) .getRequest(); String staffId =
-		 * (String) request.getAttribute("staffId"); if (staffId != null) {
-		 * this.createdBy = Integer.parseInt(staffId); }
-		 */
-		this.createdBy = 1l;
+		
+		this.createdBy = getIdofLoggedinUser();
 
-		this.createdDate = LocalDateTime.now();
+		this.createdDate =now().atZone(systemDefault()).withZoneSameInstant(of(INDIA_ZONE)).toLocalDateTime();
 	}
 
 	@PreUpdate
 	public void beforUpdate() {
-		/*
-		 * HttpServletRequest request = ((ServletRequestAttributes)
-		 * RequestContextHolder.getRequestAttributes()) .getRequest(); String staffId =
-		 * (String) request.getAttribute("staffId"); if (staffId != null) {
-		 * this.updatedBy = Integer.parseInt(staffId); }
-		 */
-		this.updatedBy = 1l;
-		this.updatedDate = LocalDateTime.now();
+		
+		this.updatedBy = getIdofLoggedinUser();
+		this.updatedDate = now().atZone(systemDefault()).withZoneSameInstant(of(INDIA_ZONE)).toLocalDateTime();
 	}
 
-	// @PreRemove
+	 @PreRemove
 	public void beforDelete() {
-		/*
-		 * HttpServletRequest request = ((ServletRequestAttributes)
-		 * RequestContextHolder.getRequestAttributes()) .getRequest(); String staffId =
-		 * (String) request.getAttribute("staffId"); if (staffId != null) {
-		 * this.deletedBy = Integer.parseInt(staffId); }
-		 */
-		this.deletedBy = 1l;
-		this.deletedDate = LocalDateTime.now();
+	
+		this.deletedBy = getIdofLoggedinUser();
+		this.deletedDate = now().atZone(systemDefault()).withZoneSameInstant(of(INDIA_ZONE)).toLocalDateTime();
 
 	}
+	 public Long getIdofLoggedinUser() {
+		    if (nonNull(getContext()) && nonNull(getContext().getAuthentication())
+		            && getContext().getAuthentication().getPrincipal() instanceof UserMaster) {
+		        UserMaster details = (UserMaster) getContext().getAuthentication().getPrincipal();
+		        return details.getId();
+		    }
+		    return null;
+		}
+
+	
 
 }

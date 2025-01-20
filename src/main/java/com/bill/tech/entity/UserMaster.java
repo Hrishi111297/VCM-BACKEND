@@ -91,9 +91,8 @@ public class UserMaster extends Auditable implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<SimpleGrantedAuthority> authorities = this.roles.stream()
+		return this.roles.stream()
 				.map((role) -> new SimpleGrantedAuthority("ROLE_" + role.getName())).collect(Collectors.toList());
-		return authorities;
 	}
 
 	@Override

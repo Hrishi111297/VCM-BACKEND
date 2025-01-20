@@ -1,5 +1,8 @@
 package com.bill.tech.authentication;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.spec.ECGenParameterSpec;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,16 +14,18 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
+import lombok.extern.slf4j.Slf4j;
+import static com.bill.tech.constants.SecurityConstant.RSA;
 @Component
+@Slf4j
 public class JwtHelper {
 
 	// requirement : 5hours
-	public static final long JWT_TOKEN_VALIDITY = 1*60* 60;
+	public static final long JWT_TOKEN_VALIDITY = 500*60* 60;
 
 	// public static final long JWT_TOKEN_VALIDITY = 60;
-	private String secret = "afafasfafafasfasfasfafacasdasfasxASFACASDFACASDFASFASFDAFASFASDAADSCSDFADCVSGCFVADXCcadwavfsfarvf";
-
+//	private String secret = "afafasfafafasfasfasfafacasdasfasxASFACASDFACASDFASFASFDAFASFASDAADSCSDFADCVSGCFVADXCcadwavfsfarvf";
+	   protected static final KeyPair keyPair = generateECKeyPair();
 	// retrieve username from jwt token
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
@@ -39,7 +44,7 @@ public class JwtHelper {
 	// for retrieveing any information from token we will need the secret key
 	@SuppressWarnings("deprecation")
 	private Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		return Jwts.parser().setSigningKey(keyPair.getPublic()).parseClaimsJws(token).getBody();
 	}
 
 	// check if the token has expired
@@ -63,7 +68,7 @@ public class JwtHelper {
 	private String doGenerateToken(Map<String, Object> claims, String subject) {
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000L))
-				.signWith(SignatureAlgorithm.HS512, secret).compact();
+				.signWith(SignatureAlgorithm.ES512,keyPair.getPrivate()).compact();
 	}
 
 	// validate token
@@ -77,7 +82,26 @@ public class JwtHelper {
 		claims.setIssuedAt(new Date());
 		claims.setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000L)); // added minutes from current time
 
-		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
+		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.ES512,keyPair.getPrivate()).compact();
 	}
-
+	private static KeyPair generateECKeyPair() {
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC");
+            ECGenParameterSpec ecGenParameterSpec = new ECGenParameterSpec("secp521r1");
+            keyPairGenerator.initialize(ecGenParameterSpec);
+            return keyPairGenerator.generateKeyPair();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating key pair", e);
+        }
+    }
+	public KeyPair getKeyPair() {
+		try {
+			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA);
+			keyPairGenerator.initialize(4096);
+			return keyPairGenerator.generateKeyPair();
+		} catch (Exception e) {
+			log.error("error occured while getting the Keys.{} ", e.getMessage());
+		}
+		return null;
+	}
 }

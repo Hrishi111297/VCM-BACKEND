@@ -34,6 +34,7 @@ import com.bill.tech.payload.request.PasswordHistoryDTO;
 import com.bill.tech.payload.request.UserMasterDataRequestDto;
 import com.bill.tech.service.ChangePasswordService;
 import com.bill.tech.service.UserMasterService;
+import com.bill.tech.util.AuditAwareUtil;
 import com.bill.tech.util.CaptchaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,6 +66,7 @@ public class Login {
 	private final CaptchaService captchaService;
 	private  final ChangePasswordService changePasswordService;
 
+
 	@PostMapping(LOGIN)
 	@Operation(summary = "login", description = "login desc")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "ok"),
@@ -74,7 +76,6 @@ public class Login {
 			throws InterruptedException {
 		try {
 			this.doAuthenticate(request.getUsername(), request.getPassword());
-			System.out.println(request.getUsername() + "&" + request.getPassword());
 			UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
 			String token = this.helper.generateToken(userDetails);
 			JwtResponse jwtResponse = JwtResponse.builder().token(token).username(userDetails.getUsername())
@@ -104,6 +105,7 @@ public class Login {
 	public Map<String, String> getCaptcha() {
 		String[] captcha = captchaService.generateCaptcha();
 		return Map.of("text", captcha[0], "image", captcha[1]);
+		
 	}
 	@PostMapping(VERIFY_OTP)
 	public  ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> verifyOtp(@PathVariable String emailId) {
