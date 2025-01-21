@@ -20,9 +20,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "guardian_detail")
-public class GuardianDetail {
+public class GuardianDetail extends Auditable{
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6206958379529102030L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

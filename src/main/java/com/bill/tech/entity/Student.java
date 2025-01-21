@@ -7,12 +7,14 @@ import org.hibernate.annotations.Where;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -43,24 +45,23 @@ public class Student extends Auditable {
     @JoinColumn(name = "user_id", nullable = false)
     private UserMaster user;
 
-
-    @Column(name = "class_name", nullable = false, length = 50)
-    private String className;
-
-    @Column(name = "batch", length = 50)
-    private String batch;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "batch_id", nullable = true)
+    private Batch batch ;
     
     @Column(name = "enrollment_date", nullable = false)
     private Date enrollmentDate;
 
     @ManyToMany
     @JoinTable(
-            name = "student_courses",
+            name = "student_batches",
             joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
+            inverseJoinColumns = @JoinColumn(name = "batch_id")
     )
-    private List<Course> assignedCourses;
-
+    private List<Batch> assignedBatches;
+    
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Attendance> attendenceList;
  
 
  

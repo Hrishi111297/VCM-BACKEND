@@ -21,7 +21,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "education_detail")
-public class Education {
+public class Education extends Auditable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1707436824773101029L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,5 +55,5 @@ public class Education {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", nullable = false)
-	private UserMaster user; // The user associated with this education
+	private UserMaster user; 
 }

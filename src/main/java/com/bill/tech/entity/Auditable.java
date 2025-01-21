@@ -29,7 +29,10 @@ import lombok.Setter;
 @Embeddable
 @MappedSuperclass
 public class Auditable implements Serializable {
-	private static final Long serialVersionUID = -4307510146029602159L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4003961051501196362L;
 
 	@Column(name = "created_by", nullable = true, updatable = true)
 	private Long createdBy;

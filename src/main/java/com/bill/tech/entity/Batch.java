@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.annotations.Where;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,7 +42,7 @@ public class Batch extends Auditable {
 	
 	private Date endDate;
 	
-	private String timings;
+	private String duration;
 
 	@ManyToOne
 	@JoinColumn(name = "course_id")
@@ -50,7 +51,12 @@ public class Batch extends Auditable {
 	@ManyToMany
 	@JoinTable(name = "batch_teachers", joinColumns = @JoinColumn(name = "batch_id"), inverseJoinColumns = @JoinColumn(name = "teacher_id"))
 	private List<Teacher> teachers;
+	
+	@OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Student> students;
+	
+	@OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Attendance> attendenceList;
 
-	@OneToMany(mappedBy = "batch")
-	private List<Attendance> attendanceRecords;
+	
 }

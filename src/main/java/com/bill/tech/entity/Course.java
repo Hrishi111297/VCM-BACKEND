@@ -86,8 +86,7 @@ public class Course extends Auditable {
     private String imageUrl;
     @PrePersist
     public void validateDates() {
-        // Ensure that endDate is after startDate
-        if (this.endDate.isBefore(this.startDate)) {
+               if (this.endDate.isBefore(this.startDate)) {
             throw new IllegalArgumentException("End date cannot be before start date.");
         }
     }

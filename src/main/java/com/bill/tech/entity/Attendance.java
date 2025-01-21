@@ -5,6 +5,7 @@ import java.util.Date;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,7 +25,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "attendance")
 @Where(clause = "deleted_by is null")
-public class Attendance {
+public class Attendance extends Auditable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1145761960739513445L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -33,11 +39,17 @@ public class Attendance {
 
 	private Boolean status;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "student_id")
 	private Student student;
-
-	@ManyToOne
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "batch_id")
 	private Batch batch;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "teacher_id")
+	private Teacher teacher;
+	  
+
 }
