@@ -1,12 +1,13 @@
 package com.bill.tech.authentication;
 
 import static com.bill.tech.authentication.AuthenticationUtil.ALLOW_URL;
+import static com.bill.tech.constants.SecurityConstant.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,17 +19,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Objects.*;
+import static com.bill.tech.constants.CommonConstants.*;
 
-import static com.bill.tech.constants.SecurityConstant.AUTHORIZATION;
 @Component
 @Slf4j
 public class JwtFiltetr extends OncePerRequestFilter {
-
 
 	@Autowired
 	private JwtHelper jwtHelper;
@@ -36,77 +38,77 @@ public class JwtFiltetr extends OncePerRequestFilter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-			if (ALLOW_URL.test(request.getServletPath())) {
-	            log.info("Skipping JWT filter for URL: {}", request.getServletPath());
-	            filterChain.doFilter(request, response);
-	            return;
-	        }
-		String requestHeader = request.getHeader(AUTHORIZATION);
-		// Bearer 2352345235sdfrsfgsdfsdf
-		log.info(" Header :  {}", requestHeader);
-		String username = null;
-		String token = null;
-		if (requestHeader != null && requestHeader.startsWith("Bearer")) {
-			// looking good
-			token = requestHeader.substring(7);
-			try {
+		if (ALLOW_URL.test(request.getServletPath())) {
+			log.info(SKIP_JWT_FILTER, request.getServletPath());
+			filterChain.doFilter(request, response);
+			return;
+		}
+		try {
+			String requestHeader = request.getHeader(AUTHORIZATION);
+			log.info(HEADER, requestHeader);
+			String username = null;
+			String token = null;
+			if (nonNull(requestHeader) && requestHeader.startsWith(BEARER)) {
+				token = requestHeader.substring(7);
 
 				username = this.jwtHelper.getUsernameFromToken(token);
 
-			} catch (IllegalArgumentException e) {
-				logger.info("Illegal Argument while fetching the username !!");
-				e.printStackTrace();
-			} catch (ExpiredJwtException e) {
-				logger.info("Given jwt token is expired !!");
-				e.printStackTrace();
-				response.setHeader(AUTHORIZATION, null);
-			} catch (MalformedJwtException e) {
-				logger.info("Some changed has done in token !! Invalid Token");
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-
-			}
-
-		} else {
-			log.info("Invalid Header Value !! ");
-			
-	
-		}
-
-		//
-		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-			// fetch user detail from username
-			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-			Boolean validateToken = this.jwtHelper.validateToken(token, userDetails);
-			if (Boolean.TRUE.equals(validateToken)) {
-
-				// If token is about to expire, refresh it
-				Date expirationDate = jwtHelper.getExpirationDateFromToken(token);
-				if (expirationDate.before(new Date(System.currentTimeMillis() + 1000 * 60 * 5))) { // 30 minutes before
-																									// expiry
-					token = jwtHelper.refreshToken(token);
-					response.setHeader(AUTHORIZATION, token);
-					log.info("Authorization header: " + response.getHeader(AUTHORIZATION));
-				}
-				// set the authentication
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-
 			} else {
-				
-				log.info("Validation fails!!");
+				log.info(INVALID_HEADER);
+
+			}
+			if (nonNull(username) && isNull(SecurityContextHolder.getContext().getAuthentication())) {
+
+				UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+				Boolean validateToken = this.jwtHelper.validateToken(token, userDetails);
+				if (Boolean.TRUE.equals(validateToken)) {
+					Date expirationDate = jwtHelper.getExpirationDateFromToken(token);
+					if (expirationDate.before(new Date(System.currentTimeMillis() + 1000 * 60 * 5))) {
+						token = jwtHelper.refreshToken(token);
+						response.setHeader(AUTHORIZATION, token);
+						log.info(HEADER + response.getHeader(AUTHORIZATION));
+					}
+					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
+					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+
+				} else {
+					log.info(VALIDATION_FAILED);
+				}
+
 			}
 
+			filterChain.doFilter(request, response);
+		} catch (ExpiredJwtException e) {
+			log.error(TOKEN_EXPIRED);
+			setErrorResponse(HttpServletResponse.SC_UNAUTHORIZED, response, TOKEN_EXPIRED);
+		} catch (MalformedJwtException e) {
+			log.error(INVALID_JWT_TOKEN);
+			setErrorResponse(HttpServletResponse.SC_BAD_REQUEST, response, INVALID_JWT_TOKEN);
+		} catch (SignatureException e) {
+			log.error(INVALID_SIGNATURE);
+			setErrorResponse(HttpServletResponse.SC_BAD_REQUEST, response, INVALID_SIGNATURE);
+		} catch (Exception e) {
+			log.error(UNEXPECTED_ERROR, e);
+			setErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response,
+					UNEXPECTED_ERROR + e.getLocalizedMessage());
 		}
 
-		filterChain.doFilter(request, response);
+	}
+
+	private void setErrorResponse(int status, HttpServletResponse response, String message) {
+		String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(REVERSE_DATE_TIME));
+		response.setStatus(status);
+		response.setContentType(JSON_CONTENT_TYPE);
+		try {
+			String json = String.format(JSON_OBJECT, timestamp, status, message);
+			response.getWriter().write(json);
+		} catch (IOException e) {
+			log.error(RESPONSE_ERROR, e);
+		}
 	}
 }
