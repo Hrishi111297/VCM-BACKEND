@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bill.tech.enums.ApiResponse;
+import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.payload.request.CourseDto;
 import com.bill.tech.service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,40 +42,40 @@ public class CourseController{
 	private final CourseService courseService;
 
 	@PostMapping(CREATE_COURSE)
-	public ResponseEntity<EnumMap<ApiResponse, Object>> createCourse(@RequestParam("course") String data,
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> createCourse(@RequestParam("course") String data,
 			@RequestParam("image") MultipartFile image) throws IOException {
 		return courseService.createCourse(image, objectMapper.readValue(data, CourseDto.class));
 	}
 
 	@PutMapping(UPDATE_COURSE)
-	public ResponseEntity<EnumMap<ApiResponse, Object>> updateCourse(@PathVariable Long id,
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateCourse(@PathVariable Long id,
 			@RequestParam("course") String data,
 			@RequestParam("image") MultipartFile image) throws IOException {
 		return courseService.updateCourse(id,  objectMapper.readValue(data, CourseDto.class), image);
 	}
 
 	@DeleteMapping(DELETE_COURSE)
-	public ResponseEntity<EnumMap<ApiResponse, Object>> deleteCourse(@PathVariable Long id) {
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> deleteCourse(@PathVariable Long id) {
 		return courseService.deleteCourse(id);
 	}
 
 	@GetMapping(GET_COURSE)
-	public ResponseEntity<EnumMap<ApiResponse, Object>> getCourse(@PathVariable Long id) {
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCourse(@PathVariable Long id) {
 		return courseService.getCourse(id);
 	}
 
 	@GetMapping(GET_ALL_COURSES)
-	public ResponseEntity<EnumMap<ApiResponse, Object>> getAllCourses() {
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getAllCourses() {
 		return courseService.getAllCourses();
 	}
 
 	@GetMapping(GET_COURSES_BY_CATEGORY)
-	public ResponseEntity<EnumMap<ApiResponse, Object>> getCoursesByCategory(@PathVariable Long categoryId) {
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCoursesByCategory(@PathVariable Long categoryId) {
 		return courseService.getCoursesByCategory(categoryId);
 	}
 
 	@GetMapping(GET_COURSES_BY_STATUS)
-	public ResponseEntity<EnumMap<ApiResponse, Object>> getCoursesByStatus(@PathVariable String status) {
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCoursesByStatus(@PathVariable String status) {
 		return courseService.getCoursesByStatus(status);
 	}
 }

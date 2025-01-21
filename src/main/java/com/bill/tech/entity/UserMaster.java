@@ -66,7 +66,7 @@ public class UserMaster extends Auditable implements UserDetails {
 	private List<String> oldPassword;
 	@Column(name = "gender",length = 10)
 	    private String gender;
-	@Column(name = "birth_date")
+	@Column(name = "birth_date",nullable=false,length=10)
 	    private LocalDate birthDate;
 	@Column(name = "adhar_number", unique = true, length = 12)
     private String adharNumber;

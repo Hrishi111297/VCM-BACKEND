@@ -97,7 +97,7 @@ public class Login {
 
 
 	@PostMapping(REGISTER)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> addUser( @Validated(CreateValidation.class) @RequestBody UserMasterDataRequestDto e) {
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> addUser( @Validated(CreateValidation.class) @RequestBody UserMasterDataRequestDto e) {
 		return this.userMasterService.addUser(e);
 	}
 
@@ -108,12 +108,12 @@ public class Login {
 		
 	}
 	@PostMapping(VERIFY_OTP)
-	public  ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> verifyOtp(@PathVariable String emailId) {
+	public  ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> verifyOtp(@PathVariable String emailId) {
 		return changePasswordService.verifyOtp(emailId);
 	}
 
 @PostMapping(CHANGEPASSWORD)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> changePassword(@PathVariable String email, @PathVariable Long otp,
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> changePassword(@PathVariable String email, @PathVariable Long otp,
 			@Valid @RequestBody PasswordHistoryDTO optDto) {
 		return changePasswordService.changePassword(email, otp, optDto);
 	}

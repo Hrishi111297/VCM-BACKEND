@@ -2,7 +2,7 @@ package com.bill.tech.service.impl;
 
 import static com.bill.tech.dto_mapper.KeyValueMapper.*;
 
-import static com.bill.tech.enums.ApiResponse. *;
+import static com.bill.tech.enums.ApiResponseEnum. *;
 import java.util.EnumMap;
 
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bill.tech.entity.KeyValue;
-import com.bill.tech.enums.ApiResponse;
+import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.exception.ResourceNotFound;
 import com.bill.tech.payload.request.KeyValueDto;
 import com.bill.tech.repository.KeyValueRepo;
@@ -27,9 +27,9 @@ public class KeyValueServiceImpl implements KeyValueService {
     private final KeyValueRepo keyValueRepo;
 
     @Override
-    public ResponseEntity<EnumMap<ApiResponse, Object>> saveOrUpdate(KeyValueDto keyValueDto) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> saveOrUpdate(KeyValueDto keyValueDto) {
         log.info("Inside saveOrUpdate method...{}", keyValueDto);
-        EnumMap<ApiResponse, Object> response = new EnumMap<>( ApiResponse.class);
+        EnumMap<ApiResponseEnum, Object> response = new EnumMap<>( ApiResponseEnum.class);
 
         KeyValue existingKeyValue = keyValueRepo.findByKey(keyValueDto.getKey());
         KeyValue save = null;
@@ -55,9 +55,9 @@ public class KeyValueServiceImpl implements KeyValueService {
     }
 
     @Override
-    public ResponseEntity<EnumMap<ApiResponse, Object>> getByKey(String key) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getByKey(String key) {
         log.info("Fetching key-value by key...{}", key);
-        EnumMap<ApiResponse, Object> response = new EnumMap<>( ApiResponse.class);
+        EnumMap<ApiResponseEnum, Object> response = new EnumMap<>( ApiResponseEnum.class);
 
         KeyValue keyValue = keyValueRepo.findByKey(key);
         if (keyValue == null) {
@@ -74,9 +74,9 @@ public class KeyValueServiceImpl implements KeyValueService {
     }
 
     @Override
-    public ResponseEntity<EnumMap<ApiResponse, Object>> deleteByKey(String key) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> deleteByKey(String key) {
         log.info("Deleting key-value by key...{}", key);
-        EnumMap<ApiResponse, Object> response = new EnumMap<>( ApiResponse.class);
+        EnumMap<ApiResponseEnum, Object> response = new EnumMap<>( ApiResponseEnum.class);
 
         KeyValue keyValue = keyValueRepo.findByKey(key);
         if (keyValue == null) {
@@ -94,9 +94,9 @@ public class KeyValueServiceImpl implements KeyValueService {
     }
 
     @Override
-    public ResponseEntity<EnumMap<ApiResponse, Object>> getAll() {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getAll() {
         log.info("Fetching all key-value pairs...");
-        EnumMap<ApiResponse, Object> response = new EnumMap<>( ApiResponse.class);
+        EnumMap<ApiResponseEnum, Object> response = new EnumMap<>( ApiResponseEnum.class);
 
         response.put( SUCCESS, true);
         response.put( DATA, TO_KEYVALUE_DTOS.apply(keyValueRepo.findAll()));

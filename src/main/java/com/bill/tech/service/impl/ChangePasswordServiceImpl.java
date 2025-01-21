@@ -4,9 +4,9 @@
 package com.bill.tech.service.impl;
 
 import java.time.LocalDateTime;
-import static com.bill.tech.enums.ApiResponse.DATA;
-import static com.bill.tech.enums.ApiResponse.MESSAGE;
-import static com.bill.tech.enums.ApiResponse.SUCCESS;
+import static com.bill.tech.enums.ApiResponseEnum.DATA;
+import static com.bill.tech.enums.ApiResponseEnum.MESSAGE;
+import static com.bill.tech.enums.ApiResponseEnum.SUCCESS;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.bill.tech.entity.OTP;
 import com.bill.tech.entity.UserMaster;
-import com.bill.tech.enums.ApiResponse;
+import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.exception.ResourceNotFound;
 import com.bill.tech.payload.request.PasswordHistoryDTO;
 import com.bill.tech.repository.OtpRepo;
@@ -56,9 +56,9 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
 
 	@SuppressWarnings("null")
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> verifyOtp(String email) {
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> verifyOtp(String email) {
 		log.info("Enter into verifyOtp method...{} ");
-	EnumMap<ApiResponse, Object>responseMap = new EnumMap<>(ApiResponse.class);
+	EnumMap<ApiResponseEnum, Object>responseMap = new EnumMap<>(ApiResponseEnum.class);
 		try {
 			UserMaster existingUser = userMaster.findByEmailId(email)
 					.orElseThrow(() -> new ResourceNotFound("User", "email", email));
@@ -112,9 +112,9 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
 
 	@SuppressWarnings("null")
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> changePassword(String email, Long otp, PasswordHistoryDTO dto) {
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> changePassword(String email, Long otp, PasswordHistoryDTO dto) {
 		log.info("Enter into changePassword method...{} ");
-		EnumMap<ApiResponse, Object>responseMap = new EnumMap<>(ApiResponse.class);
+		EnumMap<ApiResponseEnum, Object>responseMap = new EnumMap<>(ApiResponseEnum.class);
 		UserMaster existingUser = userMaster.findByEmailId(email)
 				.orElseThrow(() -> new ResourceNotFound("User", "email", email));
 		OTP checkOtp = otpRepository.findByUserMasterEmailIdAndOtpNo(email, otp);

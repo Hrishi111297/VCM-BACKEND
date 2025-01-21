@@ -51,7 +51,7 @@ public class ProfileController {
 	private final UserMasterService userMasterService;
 
 	@PostMapping(UPLOAD_PROFILE)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> ProfilePicture(@PathVariable Long userId,
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> ProfilePicture(@PathVariable Long userId,
 			@RequestParam("profile_pic") MultipartFile file) throws IOException {
 		return userMasterService.uploadProfilePicture(userId, file);
 	}
@@ -64,33 +64,33 @@ public class ProfileController {
 	}
 
 	@PutMapping(UPDATE_PERSONAL_DETAILS)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> updateProfile(
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> updateProfile(
 			@Validated(UpdateValidation.class) @org.springframework.web.bind.annotation.RequestBody UserMasterDataRequestDto user)
 			throws IOException {
 		return userMasterService.updateUser(user);
 	}
 
 	@PutMapping(UPDATE_ADDRESS)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> updateAdress(
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> updateAdress(
 			@org.springframework.web.bind.annotation.RequestBody AddressDto addressDto) {
 		return userMasterService.updateAdress(addressDto);
 	}
 
 	@PutMapping(UPDATE_GAURDIAN_DETAILS)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> updateGaurdian(
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> updateGaurdian(
 			@org.springframework.web.bind.annotation.RequestBody GuardianDetailDto guardianDetailDto)
 			throws IOException {
 		return userMasterService.updateGaurdianDetails(guardianDetailDto);
 	}
 
 	@PutMapping(UPDATE_EDUCATION_DETAILS)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> updateEducationDetails(
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> updateEducationDetails(
 			@org.springframework.web.bind.annotation.RequestBody EducationDto educationDto) throws IOException {
 		return userMasterService.updateEducation(educationDto);
 	}
 
 	@PostMapping(UPLOAD_OTHER_DOCUMENT)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponse, Object>> uploadOtherDocument(
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>> uploadOtherDocument(
 			@RequestParam("userID") Long userId, @RequestParam("doc") MultipartFile file,
 			@RequestParam("docType") String documentType) throws IOException {
 		return userMasterService.uploadDocument(userId, file, documentType);

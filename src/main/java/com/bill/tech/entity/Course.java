@@ -51,26 +51,25 @@ public class Course extends Auditable {
     private String syllabus;
     
     @Column(name = "duration", nullable = false)
-    private Integer duration;  // Duration in hours/days or months, depending on your need
-
+    private Integer duration; 
     @Lob
     @Column(name = "image", nullable = true,columnDefinition = "MEDIUMBLOB")
-    private byte[] image;  // This will store the image data as bytes
+    private byte[] image;  
     
     @Column(name = "status", nullable = false, length = 20)
-    private String status;  // To track whether the course is published or in draft
+    private String status;  
     
     @Column(name = "level", nullable = false, length = 50)
-    private String level;  // For example: Beginner, Intermediate, Advanced
+    private String level;  
     
     @Column(name = "language", nullable = false, length = 50)
-    private String language;  // The language in which the course is taught (e.g., English, Spanish)
+    private String language;  
 
     @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;  // The course start date (using LocalDate)
+    private LocalDate startDate;  
     
     @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;  // The course end date (using LocalDate)
+    private LocalDate endDate;  
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Batch> batches;

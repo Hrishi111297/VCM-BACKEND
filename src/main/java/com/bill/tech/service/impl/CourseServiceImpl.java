@@ -5,9 +5,9 @@ import static com.bill.tech.constants.FileTypes.IMAGE;
 import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE;
 import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE_DTO;
 import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE_DTOS;
-import static com.bill.tech.enums.ApiResponse.DATA;
-import static com.bill.tech.enums.ApiResponse.MESSAGE;
-import static com.bill.tech.enums.ApiResponse.SUCCESS;
+import static com.bill.tech.enums.ApiResponseEnum.DATA;
+import static com.bill.tech.enums.ApiResponseEnum.MESSAGE;
+import static com.bill.tech.enums.ApiResponseEnum.SUCCESS;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bill.tech.entity.Category;
 import com.bill.tech.entity.Course;
 import com.bill.tech.entity.Document;
-import com.bill.tech.enums.ApiResponse;
+import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.exception.ResourceNotFound;
 import com.bill.tech.payload.request.CourseDto;
 import com.bill.tech.repository.CategoryRepo;
@@ -41,9 +41,9 @@ public class CourseServiceImpl implements CourseService {
 //	private final AmazonBucketService amazonBucketService;
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> createCourse(MultipartFile image, CourseDto courseDto)
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> createCourse(MultipartFile image, CourseDto courseDto)
 			throws java.io.IOException {
-		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
+		EnumMap<ApiResponseEnum, Object> responseMap = new EnumMap<>(ApiResponseEnum.class);
 
 		Document document = FileUploadUtil.uploadFile(image, IMAGE, COURSE_BANNER);
 		courseDto.setImage(document.getData());
@@ -69,9 +69,9 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> updateCourse(Long id, CourseDto courseDto, MultipartFile image)
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateCourse(Long id, CourseDto courseDto, MultipartFile image)
 			throws IOException {
-		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
+		EnumMap<ApiResponseEnum, Object> responseMap = new EnumMap<>(ApiResponseEnum.class);
 
 		Course existingCourse = courseRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFound("Course", "id", id.toString()));
@@ -101,8 +101,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> deleteCourse(Long id) {
-		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> deleteCourse(Long id) {
+		EnumMap<ApiResponseEnum, Object> responseMap = new EnumMap<>(ApiResponseEnum.class);
 		Course course = courseRepo.findById(id).orElseThrow(() -> new ResourceNotFound("Course", "id", id.toString()));
 		courseRepo.delete(course);
 		responseMap.put(MESSAGE, "Course Deleted Successfully");
@@ -111,8 +111,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> getCourse(Long id) {
-		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCourse(Long id) {
+		EnumMap<ApiResponseEnum, Object> responseMap = new EnumMap<>(ApiResponseEnum.class);
 		Course course = courseRepo.findById(id).orElseThrow(() -> new ResourceNotFound("Course", "id", id.toString()));
 		responseMap.put(DATA, TO_COURSE_DTO.apply(course));
 		responseMap.put(SUCCESS, true);
@@ -120,8 +120,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> getAllCourses() {
-		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getAllCourses() {
+		EnumMap<ApiResponseEnum, Object> responseMap = new EnumMap<>(ApiResponseEnum.class);
 		List<Course> courses = courseRepo.findAll();
 
 		responseMap.put(DATA, TO_COURSE_DTOS.apply(courses));
@@ -131,8 +131,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> getCoursesByCategory(Long categoryId) {
-		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCoursesByCategory(Long categoryId) {
+		EnumMap<ApiResponseEnum, Object> responseMap = new EnumMap<>(ApiResponseEnum.class);
 
 		List<Course> courses = courseRepo.findByCategoryId(categoryId);
 
@@ -148,8 +148,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> getCoursesByStatus(String status) {
-		EnumMap<ApiResponse, Object> responseMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCoursesByStatus(String status) {
+		EnumMap<ApiResponseEnum, Object> responseMap = new EnumMap<>(ApiResponseEnum.class);
 
 		List<Course> courses = courseRepo.findByStatus(status);
 

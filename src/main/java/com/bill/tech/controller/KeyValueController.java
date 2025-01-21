@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bill.tech.enums.ApiResponse;
+import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.payload.request.KeyValueDto;
 import com.bill.tech.service.KeyValueService;
 
@@ -34,24 +34,24 @@ public class KeyValueController {
     private final KeyValueService keyValueService;
 	
     @PostMapping(CREATE_KEY_VALUE)
-    public ResponseEntity<EnumMap<ApiResponse, Object>> saveOrUpdate(@RequestBody KeyValueDto keyValue) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> saveOrUpdate(@RequestBody KeyValueDto keyValue) {
     return  keyValueService.saveOrUpdate(keyValue);
         
     }
     
 
     @GetMapping(GET_KEY_VALUE_ALL)
-    public 	ResponseEntity<EnumMap<ApiResponse, Object>> getAll() {
+    public 	ResponseEntity<EnumMap<ApiResponseEnum, Object>> getAll() {
     	return keyValueService.getAll();
     }
 
      @GetMapping(GET__KEY_VALUE)
-    public ResponseEntity<EnumMap<ApiResponse, Object>> getByKey(@PathVariable String key) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getByKey(@PathVariable String key) {
         return keyValueService.getByKey(key);
     }
 
      @DeleteMapping(DELETE_KEY_VALUE)
-    public ResponseEntity<EnumMap<ApiResponse, Object>> deleteById(@PathVariable String key) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> deleteById(@PathVariable String key) {
       return  keyValueService.deleteByKey(key);
         
     }

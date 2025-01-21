@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bill.tech.enums.ApiResponse;
+import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.payload.request.CategoryDto;
 import com.bill.tech.service.CategoryService;
 import com.bill.tech.util.AuditAwareUtil;
@@ -43,29 +43,29 @@ public class Category {
     private final CategoryService categoryService;
 	private final AuditAwareUtil auditAwareUtil;
     @PostMapping(CREATE_CATEGORY)
-    public ResponseEntity<EnumMap<ApiResponse, Object>> createCategory(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> createCategory(@RequestBody CategoryDto categoryDto) {
         return categoryService.addCategory(categoryDto);
     }
 
     @GetMapping(GET_ALL_CATEGORIES)
-    public ResponseEntity<EnumMap<ApiResponse, Object>> getAllCategories() {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
     @GetMapping(GET_CATEGORY)
-    public ResponseEntity<EnumMap<ApiResponse, Object>> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCategoryById(@PathVariable Long id) {
         return categoryService.getCategoryById(id);
     }
 
     @PutMapping(UPDATE_CATEGORY)
-    public ResponseEntity<EnumMap<ApiResponse, Object>> updateCategory(
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateCategory(
             @PathVariable Long id,
             @RequestBody CategoryDto categoryDto) {
         return categoryService.updateCategory(id, categoryDto);
     }
 
     @DeleteMapping(DELETE_CATEGORY)
-    public ResponseEntity<EnumMap<ApiResponse, Object>> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<EnumMap<ApiResponseEnum, Object>> deleteCategory(@PathVariable Long id) {
       return   categoryService.deleteCategory(id);
        
     }

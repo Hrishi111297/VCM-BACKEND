@@ -37,7 +37,7 @@ import com.bill.tech.entity.Education;
 import com.bill.tech.entity.GuardianDetail;
 import com.bill.tech.entity.Role;
 import com.bill.tech.entity.UserMaster;
-import com.bill.tech.enums.ApiResponse;
+import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.exception.ResourceNotFound;
 import com.bill.tech.payload.request.AddressDto;
 import com.bill.tech.payload.request.EducationDto;
@@ -70,8 +70,8 @@ public class UserMasterServiceImpl implements UserMasterService {
 	private final EducationRepo educationRepo;
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> addUser(UserMasterDataRequestDto userDTO) {
-		EnumMap<ApiResponse, Object> userMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> addUser(UserMasterDataRequestDto userDTO) {
+		EnumMap<ApiResponseEnum, Object> userMap = new EnumMap<>(ApiResponseEnum.class);
 		log.info("Inside the addUser1 method...{}", userDTO);
 
 		UserMaster user = TO_USERMASTER.apply(userDTO).orElseThrow(() -> new ResourceNotFound("User"));
@@ -85,12 +85,12 @@ public class UserMasterServiceImpl implements UserMasterService {
 					.orElseThrow(() -> new ResourceNotFound("User"));
 			savedUserDTO.setRoleIds(savedUser.getRoles().stream().map(Role::getId) // Extract role IDs
 					.collect(Collectors.toSet()));
-			userMap.put(ApiResponse.DATA, savedUserDTO);
-			userMap.put(ApiResponse.MESSAGE, "User Added Successfully");
+			userMap.put(ApiResponseEnum.DATA, savedUserDTO);
+			userMap.put(ApiResponseEnum.MESSAGE, "User Added Successfully");
 		} else {
-			userMap.put(ApiResponse.MESSAGE, "User Not Added");
+			userMap.put(ApiResponseEnum.MESSAGE, "User Not Added");
 		}
-		userMap.put(ApiResponse.SUCCESS, true);
+		userMap.put(ApiResponseEnum.SUCCESS, true);
 		return new ResponseEntity<>(userMap, HttpStatus.CREATED);
 	}
 
@@ -102,11 +102,11 @@ public class UserMasterServiceImpl implements UserMasterService {
 
 	@Override
 	@Transactional
-	public ResponseEntity<EnumMap<ApiResponse, Object>> uploadProfilePicture(Long id, MultipartFile file)
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> uploadProfilePicture(Long id, MultipartFile file)
 			throws IOException {
 		UserMaster user = userMasterRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFound("User", "id", id.toString()));
-		EnumMap<ApiResponse, Object> fileMap = new EnumMap<>(ApiResponse.class);
+		EnumMap<ApiResponseEnum, Object> fileMap = new EnumMap<>(ApiResponseEnum.class);
 		Document savedDocument = null;
 		Document document = FileUploadUtil.uploadFile(file, IMAGE, PROFILE_PICTURE);
 		document.setUser(user);
@@ -120,11 +120,11 @@ public class UserMasterServiceImpl implements UserMasterService {
 			savedDocument = documentRepo.save(document);
 		}
 		if (nonNull(savedDocument)) {
-			fileMap.put(ApiResponse.SUCCESS, true);
-			fileMap.put(ApiResponse.MESSAGE, IMAGE + " uploaded successfully.");
+			fileMap.put(ApiResponseEnum.SUCCESS, true);
+			fileMap.put(ApiResponseEnum.MESSAGE, IMAGE + " uploaded successfully.");
 		} else {
-			fileMap.put(ApiResponse.SUCCESS, false);
-			fileMap.put(ApiResponse.MESSAGE, IMAGE + " upload failed.");
+			fileMap.put(ApiResponseEnum.SUCCESS, false);
+			fileMap.put(ApiResponseEnum.MESSAGE, IMAGE + " upload failed.");
 		}
 
 		return new ResponseEntity<>(fileMap, HttpStatus.CREATED);
@@ -140,8 +140,8 @@ public class UserMasterServiceImpl implements UserMasterService {
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> updateUser(UserMasterDataRequestDto userDto) {
-		EnumMap<ApiResponse, Object> userMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateUser(UserMasterDataRequestDto userDto) {
+		EnumMap<ApiResponseEnum, Object> userMap = new EnumMap<>(ApiResponseEnum.class);
 		log.info("Inside the updateUser method...{}", userDto);
 
 		UserMaster existingUser = userMasterRepo.findById(userDto.getId())
@@ -171,21 +171,21 @@ public class UserMasterServiceImpl implements UserMasterService {
 					.orElseThrow(() -> new ResourceNotFound("User"));
 			savedUserDTO.setRoleIds(savedUser.getRoles().stream().map(Role::getId) // Extract role IDs
 					.collect(Collectors.toSet()));
-			userMap.put(ApiResponse.DATA, savedUserDTO);
-			userMap.put(ApiResponse.DATA, savedUserDTO);
-			userMap.put(ApiResponse.MESSAGE, "User Updated Successfully");
+			userMap.put(ApiResponseEnum.DATA, savedUserDTO);
+			userMap.put(ApiResponseEnum.DATA, savedUserDTO);
+			userMap.put(ApiResponseEnum.MESSAGE, "User Updated Successfully");
 		} else {
-			userMap.put(ApiResponse.MESSAGE, "User Not Updated!!");
+			userMap.put(ApiResponseEnum.MESSAGE, "User Not Updated!!");
 		}
-		userMap.put(ApiResponse.SUCCESS, true);
+		userMap.put(ApiResponseEnum.SUCCESS, true);
 
 		return new ResponseEntity<>(userMap, HttpStatus.OK);
 	}
 
 	@Override
 	@Transactional
-	public ResponseEntity<EnumMap<ApiResponse, Object>> updateAdress(AddressDto addressDto) {
-		EnumMap<ApiResponse, Object> addressMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateAdress(AddressDto addressDto) {
+		EnumMap<ApiResponseEnum, Object> addressMap = new EnumMap<>(ApiResponseEnum.class);
 		log.info("Inside the updateAddress method...{}", addressDto);
 
 		UserMaster existingUser = userMasterRepo.findById(addressDto.getUserId())
@@ -211,20 +211,20 @@ public class UserMasterServiceImpl implements UserMasterService {
 
 		if (savedAddress != null) {
 
-			addressMap.put(ApiResponse.DATA, TO_ADDRESS_DTO.apply(savedAddress));
-			addressMap.put(ApiResponse.MESSAGE, "Address Updated Successfully");
-			addressMap.put(ApiResponse.SUCCESS, true);
+			addressMap.put(ApiResponseEnum.DATA, TO_ADDRESS_DTO.apply(savedAddress));
+			addressMap.put(ApiResponseEnum.MESSAGE, "Address Updated Successfully");
+			addressMap.put(ApiResponseEnum.SUCCESS, true);
 		} else {
-			addressMap.put(ApiResponse.MESSAGE, "Address Not Updated!!");
-			addressMap.put(ApiResponse.SUCCESS, false);
+			addressMap.put(ApiResponseEnum.MESSAGE, "Address Not Updated!!");
+			addressMap.put(ApiResponseEnum.SUCCESS, false);
 		}
 
 		return new ResponseEntity<>(addressMap, HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> updateGaurdianDetails(GuardianDetailDto guardianDetailDto) {
-		EnumMap<ApiResponse, Object> guardianMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateGaurdianDetails(GuardianDetailDto guardianDetailDto) {
+		EnumMap<ApiResponseEnum, Object> guardianMap = new EnumMap<>(ApiResponseEnum.class);
 		log.info("Inside the updateGuardianDetails method...{}", guardianDetailDto);
 
 		// Fetch the user by ID
@@ -249,20 +249,20 @@ public class UserMasterServiceImpl implements UserMasterService {
 		}
 
 		if (savedGuardian != null) {
-			guardianMap.put(ApiResponse.DATA, TO_GUARDIAN_DTO.apply(savedGuardian));
-			guardianMap.put(ApiResponse.MESSAGE, "Guardian Details Updated Successfully");
-			guardianMap.put(ApiResponse.SUCCESS, true);
+			guardianMap.put(ApiResponseEnum.DATA, TO_GUARDIAN_DTO.apply(savedGuardian));
+			guardianMap.put(ApiResponseEnum.MESSAGE, "Guardian Details Updated Successfully");
+			guardianMap.put(ApiResponseEnum.SUCCESS, true);
 		} else {
-			guardianMap.put(ApiResponse.MESSAGE, "Guardian Details Not Updated!!");
-			guardianMap.put(ApiResponse.SUCCESS, false);
+			guardianMap.put(ApiResponseEnum.MESSAGE, "Guardian Details Not Updated!!");
+			guardianMap.put(ApiResponseEnum.SUCCESS, false);
 		}
 
 		return new ResponseEntity<>(guardianMap, HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<EnumMap<ApiResponse, Object>> updateEducation(EducationDto educationDetailDto) {
-	    EnumMap<ApiResponse, Object> educationMap = new EnumMap<>(ApiResponse.class);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateEducation(EducationDto educationDetailDto) {
+	    EnumMap<ApiResponseEnum, Object> educationMap = new EnumMap<>(ApiResponseEnum.class);
 	    log.info("Inside the updateEducation method...{}", educationDetailDto);
 
 	    // Fetch the user by ID
@@ -279,21 +279,21 @@ public class UserMasterServiceImpl implements UserMasterService {
 	       ;
 
 	    if (savedEducation != null) {
-	        educationMap.put(ApiResponse.DATA,TO_EDUCATION_DTO_COLLECTION.apply(educationRepo.findByUserId(educationDetailDto.getUserId())) );
-	        educationMap.put(ApiResponse.MESSAGE, "Education Details Updated Successfully");
-	        educationMap.put(ApiResponse.SUCCESS, true);
+	        educationMap.put(ApiResponseEnum.DATA,TO_EDUCATION_DTO_COLLECTION.apply(educationRepo.findByUserId(educationDetailDto.getUserId())) );
+	        educationMap.put(ApiResponseEnum.MESSAGE, "Education Details Updated Successfully");
+	        educationMap.put(ApiResponseEnum.SUCCESS, true);
 	    } else {
-	        educationMap.put(ApiResponse.MESSAGE, "Education Details Not Updated!!");
-	        educationMap.put(ApiResponse.SUCCESS, false);
+	        educationMap.put(ApiResponseEnum.MESSAGE, "Education Details Not Updated!!");
+	        educationMap.put(ApiResponseEnum.SUCCESS, false);
 	    }
 
 	    return new ResponseEntity<>(educationMap, HttpStatus.OK);
 	}
 	@Override
 	@Transactional
-	public ResponseEntity<EnumMap<ApiResponse, Object>> uploadDocument(Long userId, MultipartFile file, String documentType)
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> uploadDocument(Long userId, MultipartFile file, String documentType)
 	        throws IOException {
-	    EnumMap<ApiResponse, Object> fileMap = new EnumMap<>(ApiResponse.class);
+	    EnumMap<ApiResponseEnum, Object> fileMap = new EnumMap<>(ApiResponseEnum.class);
 
 	    // Validate user existence
 	    UserMaster user = userMasterRepo.findById(userId)
@@ -319,11 +319,11 @@ public class UserMasterServiceImpl implements UserMasterService {
 	    }
 
 	    if (nonNull(savedDocument)) {
-	        fileMap.put(ApiResponse.SUCCESS, true);
-	        fileMap.put(ApiResponse.MESSAGE, documentType + " uploaded successfully.");
+	        fileMap.put(ApiResponseEnum.SUCCESS, true);
+	        fileMap.put(ApiResponseEnum.MESSAGE, documentType + " uploaded successfully.");
 	    } else {
-	        fileMap.put(ApiResponse.SUCCESS, false);
-	        fileMap.put(ApiResponse.MESSAGE, documentType + " upload failed.");
+	        fileMap.put(ApiResponseEnum.SUCCESS, false);
+	        fileMap.put(ApiResponseEnum.MESSAGE, documentType + " upload failed.");
 	    }
 
 	    return new ResponseEntity<>(fileMap, HttpStatus.CREATED);

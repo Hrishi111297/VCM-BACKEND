@@ -1,11 +1,12 @@
 package com.bill.tech.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @SuppressWarnings("deprecation")
 @Entity
 @Getter
@@ -37,12 +39,15 @@ public class Batch extends Auditable {
 	private Long id;
 
 	private String name;
-	
-	private Date startDate;
-	
-	private Date endDate;
-	
+	@Column(name = "start_date", nullable = false, length = 10)
+	private LocalDate startDate;
+	@Column(name = "end_date", nullable = false, length = 10)
+	private LocalDate endDate;
+	@Column(name = "duration", length = 10)
 	private String duration;
+
+	@Column(name = "is_open")
+	private boolean isOpen = true;
 
 	@ManyToOne
 	@JoinColumn(name = "course_id")
@@ -51,12 +56,11 @@ public class Batch extends Auditable {
 	@ManyToMany
 	@JoinTable(name = "batch_teachers", joinColumns = @JoinColumn(name = "batch_id"), inverseJoinColumns = @JoinColumn(name = "teacher_id"))
 	private List<Teacher> teachers;
-	
+
 	@OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Student> students;
-	
+
 	@OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Attendance> attendenceList;
 
-	
 }
