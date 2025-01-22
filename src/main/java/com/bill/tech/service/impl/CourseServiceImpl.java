@@ -93,9 +93,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	private Course getCourseById(Long id) {
-		Course existingCourse = courseRepo.findById(id)
+		return courseRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFound("Course", "id", id.toString()));
-		return existingCourse;
 	}
 
 	@Override
