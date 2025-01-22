@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(AUTH)
 @Tag(name = "SecurityController", description = "This Section Gives Us The API Endpoint Related To The SecurityController")
 
-public class Login {
+public class LoginController {
 	private final UserDetailsService userDetailsService;
 	private final AuthenticationManager authenticationManager;
 	private final JwtHelper helper;

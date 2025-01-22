@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,12 +30,16 @@ import com.bill.tech.service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-
+/**
+ * @author Hrishikesh Mahadik
+ * @since 11/01/2025
+ * @version 1.0
+ *
+ */
 @RestController
-
 @RequiredArgsConstructor
 @RequestMapping(COURSE)
-public class CourseController{
+public class CourseController {
 	@Autowired
 	private ObjectMapper objectMapper;
 	private final CourseService courseService;
@@ -49,9 +52,8 @@ public class CourseController{
 
 	@PutMapping(UPDATE_COURSE)
 	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateCourse(@PathVariable Long id,
-			@RequestParam("course") String data,
-			@RequestParam("image") MultipartFile image) throws IOException {
-		return courseService.updateCourse(id,  objectMapper.readValue(data, CourseDto.class), image);
+			@RequestParam("course") String data, @RequestParam("image") MultipartFile image) throws IOException {
+		return courseService.updateCourse(id, objectMapper.readValue(data, CourseDto.class), image);
 	}
 
 	@DeleteMapping(DELETE_COURSE)

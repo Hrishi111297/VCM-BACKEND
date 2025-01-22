@@ -34,14 +34,14 @@ public class CategoryServiceImpl implements CategoryService {
 		log.info("Inside addCategory method...{}", categoryDto);
 		Category category = TO_CATEGORY.apply(categoryDto).orElseThrow(() -> new ResourceNotFound(CATEGORY));
 		Category savedCategory = categoryRepo.save(category);
-		return ApiResponse.buildApiResponse(TO_CATEGORY_DTO.apply(savedCategory), CATEGORY + ADDED, HttpStatus.CREATED);
+		return ApiResponse.buildSuccesResponse(TO_CATEGORY_DTO.apply(savedCategory), CATEGORY + ADDED, HttpStatus.CREATED);
 
 	}
 
 	@Override
 	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getAllCategories() {
 		log.info("Fetching all categories...");
-		return ApiResponse.buildApiResponse(TO_CATEGORY_DTOS.apply(categoryRepo.findAll()), CATEGORY + FETCHED,
+		return ApiResponse.buildSuccesResponse(TO_CATEGORY_DTOS.apply(categoryRepo.findAll()), CATEGORY + FETCHED,
 				HttpStatus.OK);
 
 	}
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCategoryById(Long id) {
 		log.info("Fetching category by ID...{}", id);
 		Category category = getCatogory(id);
-		return ApiResponse.buildApiResponse(TO_CATEGORY_DTO.apply(category), CATEGORY + FETCHED, HttpStatus.OK);
+		return ApiResponse.buildSuccesResponse(TO_CATEGORY_DTO.apply(category), CATEGORY + FETCHED, HttpStatus.OK);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
 		existingCategory.setName(categoryDto.getName());
 		existingCategory.setDescription(categoryDto.getDescription());
 		Category updatedCategory = categoryRepo.save(existingCategory);
-		return ApiResponse.buildApiResponse(TO_CATEGORY_DTO.apply(updatedCategory), CATEGORY + UPDATED, HttpStatus.OK);
+		return ApiResponse.buildSuccesResponse(TO_CATEGORY_DTO.apply(updatedCategory), CATEGORY + UPDATED, HttpStatus.OK);
 
 	}
 
@@ -70,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
 		log.info("Deleting category...{}", id);
 		Category category = getCatogory(id);
 		categoryRepo.delete(category);
-		return ApiResponse.buildApiResponse(null, CATEGORY + DELETED, HttpStatus.OK);
+		return ApiResponse.buildSuccesResponse(null, CATEGORY + DELETED, HttpStatus.OK);
 
 	}
 

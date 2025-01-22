@@ -11,10 +11,18 @@ import java.util.stream.Collectors;
 import com.bill.tech.entity.Category;
 import com.bill.tech.payload.request.CategoryDto;
 
-public class CategoryMapper {
-	CategoryMapper() {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+/**
+ * @author Hrishikesh Mahadik
+ * @since 11/01/2025
+ * @version 1.0
+ *
+ */
 
-	}
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class CategoryMapper {
+
 
 	/**
 	 * This function will convert AddCallDto into optional AddCall Entity. <b>This

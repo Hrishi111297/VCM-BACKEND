@@ -108,7 +108,7 @@ public class UserMaster extends Auditable implements UserDetails {
 	}
 
 	public UserMaster(String firstName, String middleName, String lastName, String contactNumber, String emailId,
-			String password, Set<Role> roles) {
+			String password, Set<Role> roles,LocalDate date) {
 		super();
 		this.firstName = firstName;
 		this.middleName = middleName;
@@ -117,5 +117,6 @@ public class UserMaster extends Auditable implements UserDetails {
 		this.emailId = emailId;
 		this.password = password;
 		this.roles = roles;
+		this.birthDate=date;
 	}
 }

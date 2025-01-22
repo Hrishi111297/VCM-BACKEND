@@ -11,11 +11,16 @@ import java.util.stream.Collectors;
 import com.bill.tech.entity.Education;
 import com.bill.tech.payload.request.EducationDto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+/**
+ * @author Hrishikesh Mahadik
+ * @since 11/01/2025
+ * @version 1.0
+ *
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EducationMapper {
-
-	EducationMapper() {
-
-	}
 
 	/**
 	 * This function will convert AddCallDto into optional AddCall Entity. <b>This

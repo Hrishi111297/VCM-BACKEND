@@ -13,11 +13,18 @@ import java.util.stream.Collectors;
 
 import com.bill.tech.entity.Document;
 import com.bill.tech.payload.request.DocumentDto;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+/**
+ * @author Hrishikesh Mahadik
+ * @since 11/01/2025
+ * @version 1.0
+ *
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)	
 public class DocumentMapper {
 
-	DocumentMapper() {
-
-	}
 
 	/**
 	 * This function will convert AddCallDto into optional AddCall Entity. <b>This

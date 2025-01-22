@@ -3,8 +3,9 @@ package com.bill.tech.dto_mapper;
 
 
 
-import java.util.Collection;
+import static com.bill.tech.util.FunctionUtil.evalMapper;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -12,15 +13,12 @@ import java.util.stream.Collectors;
 
 import com.bill.tech.entity.UserMaster;
 import com.bill.tech.payload.request.UserMasterDataRequestDto;
-import static com.bill.tech.util.FunctionUtil.eval;
-import static com.bill.tech.util.FunctionUtil.evalMapper;
-import static com.bill.tech.util.FunctionUtil.evalMapperCollection;
-import static com.bill.tech.util.FunctionUtil.evalMapperProjection;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMasterMapper {
 
-	UserMasterMapper() {
-
-	}
 
 	/**
 	 * This function will convert AddCallDto into optional AddCall Entity. <b>This

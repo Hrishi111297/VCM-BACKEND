@@ -11,10 +11,16 @@ import java.util.stream.Collectors;
 import com.bill.tech.entity.KeyValue;
 import com.bill.tech.payload.request.KeyValueDto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+/**
+ * @author Hrishikesh Mahadik
+ * @since 11/01/2025
+ * @version 1.0
+ *
+ */
 public class KeyValueMapper {
-	KeyValueMapper() {
-
-	}
 
 	/**
 	 * This function will convert AddCallDto into optional AddCall Entity. <b>This

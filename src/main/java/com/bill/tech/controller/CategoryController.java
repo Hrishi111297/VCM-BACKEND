@@ -39,9 +39,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-public class Category {
+public class CategoryController {
     private final CategoryService categoryService;
-	private final AuditAwareUtil auditAwareUtil;
     @PostMapping(CREATE_CATEGORY)
     public ResponseEntity<EnumMap<ApiResponseEnum, Object>> createCategory(@RequestBody CategoryDto categoryDto) {
         return categoryService.addCategory(categoryDto);

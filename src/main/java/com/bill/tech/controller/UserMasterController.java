@@ -15,6 +15,12 @@ import com.bill.tech.service.UserMasterService;
 import com.bill.tech.util.AuditAwareUtil;
 
 import lombok.RequiredArgsConstructor;
+/**
+ * @author Hrishikesh Mahadik
+ * @since 11/01/2025
+ * @version 1.0
+ *
+ */
 @RestController
 @RequestMapping(CATEGORY)
 @RequiredArgsConstructor

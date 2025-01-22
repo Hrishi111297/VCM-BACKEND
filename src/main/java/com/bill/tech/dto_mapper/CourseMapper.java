@@ -11,11 +11,18 @@ import java.util.stream.Collectors;
 import com.bill.tech.entity.Course;
 import com.bill.tech.payload.request.CourseDto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+/**
+ * @author Hrishikesh Mahadik
+ * @since 11/01/2025
+ * @version 1.0
+ *
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CourseMapper {
 
-    private CourseMapper() {
-        // Private constructor to prevent instantiation
-    }
+   
 
     /**
      * This function will convert CourseDto into optional Course Entity. 

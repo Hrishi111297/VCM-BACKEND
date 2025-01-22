@@ -1,5 +1,6 @@
 package com.bill.tech.util;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -33,7 +34,7 @@ public class RoleDataLoader implements CommandLineRunner {
 		if(userMasterRepo.count()==0) {
 			  Role superAdminRole = role.findByName("SUPER_ADMIN")
 			            .orElseThrow(() -> new ResourceNotFound("Role SUPER_ADMIN not found"));
-		UserMaster user=new UserMaster( "admin", "admin", "admin", "1234567890", "admin@gmail.com", "admin@123", Set.of(superAdminRole));
+		UserMaster user=new UserMaster( "admin", "admin", "admin", "1234567890", "admin@gmail.com", "admin@123", Set.of(superAdminRole),LocalDate.of(2000, 1, 1));
 		userMasterRepo.save(user);
 		}
 	}

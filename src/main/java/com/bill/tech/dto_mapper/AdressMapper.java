@@ -11,10 +11,17 @@ import java.util.stream.Collectors;
 import com.bill.tech.entity.Address;
 import com.bill.tech.payload.request.AddressDto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+/**
+ * @author Hrishikesh Mahadik
+ * @since 11/01/2025
+ * @version 1.0
+ *
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdressMapper {
-	AdressMapper() {
 
-	}
 
 	/**
 	 * This function will convert AddCallDto into optional AddCall Entity. <b>This
