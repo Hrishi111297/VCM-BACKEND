@@ -8,6 +8,7 @@ public class ApiMessages {
 	public static final String CATEGORY = "Category";
 	public static final String COURSE = "Course";
 	public static final String USER = "User";
+	public static final String BATCH = "Batch";
 	public static final String KEY_VALUE = "Key Value";
 	public static final String ADDED = " Added Successfully!";
 	public static final String NOT_ADDED = " Not Added!";
