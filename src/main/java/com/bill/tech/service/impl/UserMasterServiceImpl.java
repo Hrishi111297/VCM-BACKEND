@@ -273,6 +273,12 @@ public class UserMasterServiceImpl implements UserMasterService {
 	   
 	        Education newEducation = TO_EDUCATION.apply(educationDetailDto)
 	                .orElseThrow(() -> new ResourceNotFound("EducationDetail"));
+	        boolean exists=educationRepo.existsByUserIdAndDegree(educationDetailDto.getUserId(), educationDetailDto.getDegree());
+	      if(exists) {
+	    	   educationMap.put(ApiResponseEnum.MESSAGE, "This degree is already added for the user.!!");
+		        educationMap.put(ApiResponseEnum.SUCCESS, false);
+		        return new ResponseEntity<>(educationMap, HttpStatus.OK);
+	      }
 	        newEducation.setUser(existingUser);
 	        Education   savedEducation = educationRepo.save(newEducation);
 	        

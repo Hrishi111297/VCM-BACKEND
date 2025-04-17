@@ -69,8 +69,8 @@ public class GloabalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        String message = "Data integrity violation: " + (ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage());
-        ApiError apiError = new ApiError(false, message, HttpStatus.CONFLICT);
+        //String message = "Data integrity violation: " + (ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage());
+        ApiError apiError = new ApiError(false, "Duplicate Entry!!!!!", HttpStatus.CONFLICT);
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
@@ -107,6 +107,10 @@ public class GloabalExceptionHandler {
         // Check if the root exception is an InvalidKeyException
         else if (rootException instanceof InvalidKeyException) {
             ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Token expired", Arrays.asList("Your session has expired"));
+            return new ResponseEntity<>(apiError, apiError.getHttpStatus());
+        }
+        else if (rootException instanceof DataIntegrityViolationException) {
+            ApiError apiError = new ApiError(HttpStatus.CONFLICT, "Duplicate Entry!!!!!", Arrays.asList("Duplicate Entry!!!!!"));
             return new ResponseEntity<>(apiError, apiError.getHttpStatus());
         }
         // Check if the root exception is a MultipartException (e.g., file upload error)

@@ -78,4 +78,15 @@ public static final String AWS_LIST= SEPERATOR + "list";
 public static final String DELETE_FILENAME = SEPERATOR + "delete/{fileName}";
 public static final String DELETE_ALL = SEPERATOR + "delete-all";
 
+
+//Batch Constants
+public static final String BATCH = BASE + "batch" + SEPERATOR;
+public static final String CREATE_BATCH = SEPERATOR + "create-batch";
+public static final String UPDATE_BATCH= SEPERATOR + "update-batch/{id}";
+public static final String DELETE_BATCH = SEPERATOR + "delete-batch/{id}";
+public static final String GET_BATCH = SEPERATOR + "get-batch/{id}";
+public static final String GET_ALL_BATCHES= SEPERATOR + "get-all-batches";
+public static final String GET_BATCH_BY_COURSE = SEPERATOR + "get-batches-by-course/{courseid}";
+public static final String GET_BATCH_BY_STATUS = SEPERATOR + "get-batches-by-status/{status}";
+
 }

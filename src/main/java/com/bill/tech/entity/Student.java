@@ -62,6 +62,9 @@ public class Student extends Auditable {
     
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Attendance> attendenceList;
+    
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+ 	private List<Fee> fees;
  
 
  
