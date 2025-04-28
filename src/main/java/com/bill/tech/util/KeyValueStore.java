@@ -16,5 +16,7 @@ public class KeyValueStore {
 	        this.bucketName = bucketName;
 	    }
 
-	   
+//	    name=dhfz7sasz
+//	    	api-ky=514176814984393
+//	    		cloudini-secASret=qLih9n4PeRPU99I4EWDu69W6y4M
 }

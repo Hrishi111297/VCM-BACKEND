@@ -50,7 +50,7 @@ public class KeyValueServiceImpl implements KeyValueService {
 	}
 
 	private KeyValue getKeyValueByKey(String key) {
-		return keyValueRepo.findByKey(key).orElseThrow(() -> new ResourceNotFound(KEY_VALUE));
+		return keyValueRepo.findByKey(key).orElse(null);
 	}
 
 	@Override
