@@ -25,6 +25,12 @@ public class Document {
 
     @Lob 
     private byte[] data;
+    
+    @Column(name = "image_url")
+    private String imageUrl;
+    
+    @Column(name = "public_id")
+    private String publicId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

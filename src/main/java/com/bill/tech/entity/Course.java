@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,9 +14,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -52,9 +54,9 @@ public class Course extends Auditable {
     
     @Column(name = "duration", nullable = false)
     private Integer duration; 
-    @Lob
-    @Column(name = "image", nullable = true,columnDefinition = "MEDIUMBLOB")
-    private byte[] image;  
+    
+    @Column(name = "image_url", nullable = true)
+    private String  imageUrl;  
     
     @Column(name = "status", nullable = false, length = 20)
     private String status;  
@@ -70,7 +72,9 @@ public class Course extends Auditable {
     
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;  
-
+    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Image images;
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Batch> batches;
 
@@ -81,8 +85,7 @@ public class Course extends Auditable {
     @JoinColumn(name = "category_id", nullable = true) 
     private Category category;
     
-    @Column(name = "imageUrl", unique = true,length = 100)
-    private String imageUrl;
+
     @PrePersist
     public void validateDates() {
                if (this.endDate.isBefore(this.startDate)) {

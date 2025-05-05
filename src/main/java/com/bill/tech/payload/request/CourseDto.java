@@ -3,9 +3,9 @@ package com.bill.tech.payload.request;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.bill.tech.entity.Image;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Future;
@@ -38,8 +38,8 @@ public class CourseDto {
     @NotNull(message = "Duration cannot be null")
     @Min(value = 1, message = "Duration must be at least 1 month")
     private Integer duration;  // Duration in hours/days or months, depending on your need
-   @JsonProperty(access = Access.WRITE_ONLY)
-    private byte[] image;  // Image data as bytes, can be set in the service layer or controller
+   
+     // Image data as bytes, can be set in the service layer or controller
 
     @NotNull(message = "Status cannot be null")
     @Size(min = 3, max = 20, message = "Status must be between 3 and 20 characters")
@@ -64,8 +64,7 @@ public class CourseDto {
     @NotNull(message = "Category cannot be null")
     private Long categoryId;  // Assuming that the category ID is passed as a reference
   
-    private String imageUrl;
-
+    private Image images;
 
    
 }

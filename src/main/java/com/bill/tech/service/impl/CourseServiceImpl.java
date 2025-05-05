@@ -1,18 +1,19 @@
 package com.bill.tech.service.impl;
 
 import static com.bill.tech.constants.ApiMessages.ADDED;
-import static com.bill.tech.constants.ApiMessages.*;
+import static com.bill.tech.constants.ApiMessages.CATEGORY;
+import static com.bill.tech.constants.ApiMessages.COURSE;
 import static com.bill.tech.constants.ApiMessages.DELETED;
 import static com.bill.tech.constants.ApiMessages.FETCHED;
+import static com.bill.tech.constants.ApiMessages.FOR;
+import static com.bill.tech.constants.ApiMessages.NOT_FOUND;
+import static com.bill.tech.constants.ApiMessages.STATUS;
 import static com.bill.tech.constants.ApiMessages.UPDATED;
 import static com.bill.tech.constants.FileTypes.COURSE_BANNER;
 import static com.bill.tech.constants.FileTypes.IMAGE;
 import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE;
 import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE_DTO;
 import static com.bill.tech.dto_mapper.CourseMapper.TO_COURSE_DTOS;
-import static com.bill.tech.enums.ApiResponseEnum.DATA;
-import static com.bill.tech.enums.ApiResponseEnum.MESSAGE;
-import static com.bill.tech.enums.ApiResponseEnum.SUCCESS;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bill.tech.entity.Category;
 import com.bill.tech.entity.Course;
 import com.bill.tech.entity.Document;
+import com.bill.tech.entity.Image;
 import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.exception.ResourceNotFound;
 import com.bill.tech.payload.request.CourseDto;
@@ -34,7 +36,9 @@ import com.bill.tech.repository.CategoryRepo;
 import com.bill.tech.repository.CourseRepo;
 import com.bill.tech.service.CourseService;
 import com.bill.tech.util.FileUploadUtil;
+import com.bill.tech.util.MediaServiceForImageAndVideoes;
 
+import io.jsonwebtoken.lang.Objects;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,18 +48,22 @@ public class CourseServiceImpl implements CourseService {
 	private final CourseRepo courseRepo;
 	private final CategoryRepo categoryRepo;
 //	private final AmazonBucketService amazonBucketService;
+	private final MediaServiceForImageAndVideoes mediaService;
 
 	@Override
 	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> createCourse(MultipartFile image, CourseDto courseDto)
 			throws java.io.IOException {
 
-		Document document = FileUploadUtil.uploadFile(image, IMAGE, COURSE_BANNER);
-		courseDto.setImage(document.getData());
+		//Document document = FileUploadUtil.uploadFile(image, IMAGE, COURSE_BANNER);
+		//courseDto.setImage(document.getData());
 		// String imageUrl = amazonBucketService.uploadFile(image);
 		// courseDto.setImageUrl(imageUrl);
+		Image image1=mediaService.uploadImage(image, IMAGE);
+		courseDto.setImages(image1);
 		Course course = TO_COURSE.apply(courseDto).orElseThrow(() -> new ResourceNotFound("Course"));
 		Category category = getCatogoryById(courseDto);
 		course.setCategory(category);
+		image1.setCourse(course);
 		Course savedCourse = courseRepo.save(course);
 		return ApiResponse.buildSuccesResponse(TO_COURSE_DTO.apply(savedCourse), COURSE + ADDED, HttpStatus.CREATED);
 	}
@@ -72,8 +80,20 @@ public class CourseServiceImpl implements CourseService {
 
 		Course existingCourse = getCourseById(id);
 
-		Document document = FileUploadUtil.uploadFile(image, IMAGE, COURSE_BANNER);
-		courseDto.setImage(document.getData());
+		//Document document = FileUploadUtil.uploadFile(image, IMAGE, COURSE_BANNER);
+		//courseDto.setImage(document.getData());
+		if(java.util.Objects.nonNull(existingCourse.getImages())) {
+			Image image1=mediaService.updateImage(existingCourse.getImages().getId(),image, IMAGE);
+			existingCourse.setImages(image1);
+			image1.setCourse(existingCourse);
+		}
+		else {
+			Image image1=mediaService.uploadImage(image, IMAGE);
+			courseDto.setImages(image1);
+			image1.setCourse(existingCourse);
+		}
+		
+	
 		existingCourse.setName(courseDto.getName());
 		existingCourse.setDescription(courseDto.getDescription());
 		existingCourse.setFee(courseDto.getFee());
@@ -84,7 +104,7 @@ public class CourseServiceImpl implements CourseService {
 		existingCourse.setLanguage(courseDto.getLanguage());
 		existingCourse.setStartDate(courseDto.getStartDate());
 		existingCourse.setEndDate(courseDto.getEndDate());
-		existingCourse.setImage(courseDto.getImage());
+	//	existingCourse.setImage(courseDto.getImage());
 		// amazonBucketService.deleteFileByUrl(existingCourse.getImageUrl());
 		// String imageUrl = amazonBucketService.uploadFile(image);
 		// existingCourse.setImageUrl(imageUrl);
