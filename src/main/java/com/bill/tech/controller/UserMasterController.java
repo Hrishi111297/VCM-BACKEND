@@ -1,6 +1,6 @@
 package com.bill.tech.controller;
 
-import static com.bill.tech.constants.ApiConstants.CATEGORY;
+import static com.bill.tech.constants.ApiConstants.*;
 
 import java.util.List;
 

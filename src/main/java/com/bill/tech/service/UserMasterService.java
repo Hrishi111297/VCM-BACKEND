@@ -37,4 +37,6 @@ public interface UserMasterService {
 
 
 	ResponseEntity<?> retriveProfileOtherDocs(Long id, String docType);
+
+	ResponseEntity<EnumMap<ApiResponseEnum, Object>> getUserProfile(Long userId);
 }

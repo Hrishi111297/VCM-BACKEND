@@ -39,6 +39,7 @@ public static final String UPLOAD_OTHER_DOCUMENT = SEPERATOR+"upload-other";
 public static final String RETRIVE_DOCS = SEPERATOR+"retirveDocs";
 public static final String RETRIVE_PROFILE_PHOTO=SEPERATOR+"profile-picture/{id}";
 public static final String UPDATE_PERSONAL_DETAILS=SEPERATOR+"update-profile";
+public static final String RETRIVE_PROFILE_DETAILS=SEPERATOR+"profile-details/{id}";
 
 public static final String UPDATE_ADDRESS=SEPERATOR+"update_address";
 public static final String UPDATE_GAURDIAN_DETAILS=SEPERATOR+"update-gaurdian";
@@ -88,5 +89,12 @@ public static final String GET_BATCH = SEPERATOR + "get-batch/{id}";
 public static final String GET_ALL_BATCHES= SEPERATOR + "get-all-batches";
 public static final String GET_BATCH_BY_COURSE = SEPERATOR + "get-batches-by-course/{courseid}";
 public static final String GET_BATCH_BY_STATUS = SEPERATOR + "get-batches-by-status/{status}";
+
+//Role Constants
+public static final String ROLE = BASE + "role" + SEPERATOR;
+public static final String GET_ROLES =SEPERATOR + "get-roles";
+public static final String GET_USER_ROLE= SEPERATOR + "get-role/{id}";
+public static final String UPDATE_USER_ROLE = SEPERATOR + "update-role/{id}";
+
 
 }

@@ -3,9 +3,10 @@ package com.bill.tech.controller;
 import static com.bill.tech.constants.ApiConstants.UPDATE_ADDRESS;
 
 
+
 import static com.bill.tech.constants.ApiConstants.UPDATE_GAURDIAN_DETAILS;
 import static com.bill.tech.constants.ApiConstants.PROFILE;
-import static com.bill.tech.constants.ApiConstants.RETRIVE_PROFILE_PHOTO;
+import static com.bill.tech.constants.ApiConstants.*;
 import static com.bill.tech.constants.ApiConstants.UPDATE_PERSONAL_DETAILS;
 import static com.bill.tech.constants.ApiConstants.UPLOAD_PROFILE;
 import static com.bill.tech.constants.ApiConstants.UPDATE_EDUCATION_DETAILS;
@@ -100,6 +101,11 @@ public class ProfileController {
 	public ResponseEntity<?> retriveDocument(@RequestParam("userID") Long userId,
 			@RequestParam("docType") String documentType) throws IOException {
 		return userMasterService.retriveProfileOtherDocs(userId, documentType);
+	}
+	
+	@GetMapping(RETRIVE_PROFILE_DETAILS)
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>>getProfileData(@PathVariable Long id){
+		return userMasterService.getUserProfile(id);
 	}
 
 }

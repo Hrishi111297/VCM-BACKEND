@@ -1,17 +1,17 @@
 package com.bill.tech.service.impl;
 
 import static com.bill.tech.constants.FileTypes.IMAGE;
+
 import static com.bill.tech.constants.FileTypes.PROFILE_PICTURE;
 import static com.bill.tech.constants.RoleConstants.VCM_STUDENT;
 import static com.bill.tech.dto_mapper.AdressMapper.TO_ADDRESS;
 import static com.bill.tech.dto_mapper.AdressMapper.TO_ADDRESS_DTO;
 import static com.bill.tech.dto_mapper.EducationMapper.TO_EDUCATION;
-import static com.bill.tech.dto_mapper.EducationMapper.TO_EDUCATION_DTO;
+import static com.bill.tech.dto_mapper.EducationMapper.TO_EDUCATION_DTO_COLLECTION;
 import static com.bill.tech.dto_mapper.GaurdianMapper.TO_GUARDIAN;
 import static com.bill.tech.dto_mapper.GaurdianMapper.TO_GUARDIAN_DTO;
 import static com.bill.tech.dto_mapper.UserMasterMapper.TO_USERMASTER;
-import static com.bill.tech.dto_mapper.UserMasterMapper.TO_USERMASTER_DTO;
-import static com.bill.tech.dto_mapper.EducationMapper.TO_EDUCATION_DTO_COLLECTION;
+import static com.bill.tech.dto_mapper.UserMasterMapper.*;
 import static java.util.Objects.nonNull;
 
 import java.io.IOException;
@@ -22,10 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,9 +37,11 @@ import com.bill.tech.entity.UserMaster;
 import com.bill.tech.enums.ApiResponseEnum;
 import com.bill.tech.exception.ResourceNotFound;
 import com.bill.tech.payload.request.AddressDto;
+import com.bill.tech.payload.request.DocumentDto;
 import com.bill.tech.payload.request.EducationDto;
 import com.bill.tech.payload.request.GuardianDetailDto;
 import com.bill.tech.payload.request.UserMasterDataRequestDto;
+import com.bill.tech.payload.response.UserProfileDto;
 import com.bill.tech.repository.AddressRepo;
 import com.bill.tech.repository.DocumentRepo;
 import com.bill.tech.repository.EducationRepo;
@@ -340,6 +339,42 @@ public class UserMasterServiceImpl implements UserMasterService {
 				.orElseThrow(() -> new ResourceNotFound("User", "id", id.toString()));
 		Document document = documentRepo.findByUserAndDocumentType(user, docType);
 		 return FileUploadUtil.buildDocumentResponse(document);	
+	}
+	@Override
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getUserProfile(Long userId) {
+	    EnumMap<ApiResponseEnum, Object> profileMap = new EnumMap<>(ApiResponseEnum.class);
+	    log.info("Inside getUserProfile method for userId: {}", userId);
+
+	    UserMaster user = userMasterRepo.findById(userId)
+	            .orElseThrow(() -> new ResourceNotFound("User", "id", userId.toString()));
+
+	    UserProfileDto profileDto = TO_USERMASTER_DTO_RESPONSE.apply(user)
+	            .orElseThrow(() -> new IllegalStateException("Mapping failed for userId: " + userId));
+
+	    // Enrich with additional nested DTOs
+	    Address address = addressRepo.findByUserId(userId);
+	    if (nonNull(address)) {
+	        profileDto.setAddressDto(TO_ADDRESS_DTO.apply(address).orElse(null));
+	    }
+
+	    GuardianDetail guardianDetail = guardianRepo.findByUserId(userId);
+	    if (nonNull(guardianDetail)) {
+	        profileDto.setGuardianDetailsDto(TO_GUARDIAN_DTO.apply(guardianDetail).orElse(null));
+	    }
+
+	    List<Document> documents = documentRepo.findByUser(user);
+	    profileDto.setDocumentDtos(documents.stream()
+	            .map(doc -> modelMapper.map(doc, DocumentDto.class))
+	            .collect(Collectors.toList()));
+
+	    List<Education> educations = educationRepo.findByUserId(userId);
+	    profileDto.setEducationDetailsDto(TO_EDUCATION_DTO_COLLECTION.apply(educations));
+	    profileDto.setRoles( user.getRoles());
+	    profileMap.put(ApiResponseEnum.DATA, profileDto);
+	    profileMap.put(ApiResponseEnum.MESSAGE, "User Profile Fetched Successfully");
+	    profileMap.put(ApiResponseEnum.SUCCESS, true);
+
+	    return new ResponseEntity<>(profileMap, HttpStatus.OK);
 	}
 
 
