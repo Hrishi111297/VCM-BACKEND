@@ -3,6 +3,8 @@ package com.bill.tech.payload.request;
 import java.time.LocalDate;
 import java.util.Set;
 
+import com.bill.tech.entity.Attendance;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -30,5 +32,7 @@ public class BatchDto {
 	private Set<Long> teacherIds;
 
 	private Set<Long> students;
+	
+	private Set<Attendance> attendenceList;
 
 }

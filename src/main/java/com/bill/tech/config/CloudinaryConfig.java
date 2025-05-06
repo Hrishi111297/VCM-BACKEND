@@ -26,7 +26,7 @@ public class CloudinaryConfig {
     public KeyValueStore keyValueStore() {
         List<KeyValue> keyValuePairs = getAllValues();
 
-        // Safely retrieve key-value pairs using defaults if missing
+       
         String accessKey = findKeyValue(keyValuePairs, "access-key").orElse("");
         String secretKey = findKeyValue(keyValuePairs, "secret-key").orElse("");
         String region = findKeyValue(keyValuePairs, "region").orElse("us-east-1");
@@ -35,7 +35,6 @@ public class CloudinaryConfig {
         return new KeyValueStore(accessKey, secretKey, region, bucketName);
     }
 
-    // Helper method to get values safely with defaults if not present
     private Optional<String> findKeyValue(List<KeyValue> keyValuePairs, String key) {
         return keyValuePairs.stream()
                             .filter(kv -> key.equals(kv.getKey()))

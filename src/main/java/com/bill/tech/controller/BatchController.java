@@ -20,15 +20,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.bill.tech.enums.ApiResponseEnum;
-import com.bill.tech.payload.request.CourseDto;
-import com.bill.tech.service.CourseService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bill.tech.payload.request.BatchDto;
+import com.bill.tech.service.BatchService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 /**
  * @author Hrishikesh Mahadik
@@ -41,43 +39,42 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(BATCH)
 public class BatchController {
 	@Autowired
-	private ObjectMapper objectMapper;
-	private final CourseService courseService;
+	
+	private final BatchService batchService;
 
 	@PostMapping(CREATE_BATCH)
-	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> createCourse(@RequestParam("course") String data,
-			@RequestParam("image") MultipartFile image) throws IOException {
-		return courseService.createCourse(image, objectMapper.readValue(data, CourseDto.class));
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> createbatch(@RequestBody BatchDto batchDto) throws IOException {
+		return batchService.createbatch(batchDto);
 	}
 
 	@PutMapping(UPDATE_BATCH)
-	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateCourse(@PathVariable Long id,
-			@RequestParam("course") String data, @RequestParam("image") MultipartFile image) throws IOException {
-		return courseService.updateCourse(id, objectMapper.readValue(data, CourseDto.class), image);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> updateBatch(@PathVariable Long id,
+			@RequestBody BatchDto batchDto)  {
+		return batchService.updateBatch(id,batchDto);
 	}
 
 	@DeleteMapping(DELETE_BATCH)
-	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> deleteCourse(@PathVariable Long id) {
-		return courseService.deleteCourse(id);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> deleteBatch(@PathVariable Long id) {
+		return batchService.deleteBatch(id);
 	}
 
 	@GetMapping(GET_BATCH)
-	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCourse(@PathVariable Long id) {
-		return courseService.getCourse(id);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getBatch(@PathVariable Long id) {
+		return batchService.getBatch(id);
 	}
 
 	@GetMapping(GET_ALL_BATCHES)
-	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getAllCourses() {
-		return courseService.getAllCourses();
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getAllBatches() {
+		return batchService.getAllBatches();
 	}
 
 	@GetMapping(GET_BATCH_BY_COURSE)
-	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCoursesByCategory(@PathVariable Long categoryId) {
-		return courseService.getCoursesByCategory(categoryId);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getBatchByCourse(@PathVariable Long courseId) {
+		return batchService.getBatchByCourse(courseId);
 	}
 
 	@GetMapping(GET_COURSES_BY_STATUS)
-	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCoursesByStatus(@PathVariable String status) {
-		return courseService.getCoursesByStatus(status);
+	public ResponseEntity<EnumMap<ApiResponseEnum, Object>> getCoursesByStatus(@PathVariable boolean status) {
+		return batchService.getBatchesByStatus(status);
 	}
 }
