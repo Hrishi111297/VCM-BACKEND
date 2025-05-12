@@ -31,7 +31,7 @@ public class UserMasterMapper {
 	public static final Function<UserMaster, Optional<UserMasterDataRequestDto>> TO_USERMASTER_DTO = e -> evalMapper(e, UserMasterDataRequestDto.class);
 	public static final Function<UserMaster, Optional<UserProfileDto>> TO_USERMASTER_DTO_RESPONSE = e -> evalMapper(e, UserProfileDto.class);
 
-	public static final Function<Collection<UserMaster>, List<UserMasterDataRequestDto>> TO_CALL_DTOS = e -> e.stream()
+	public static final Function<Collection<UserMaster>, List<UserMasterDataRequestDto>> TO_USER_MASTER_DTOS = e -> e.stream()
 			.map(dm -> TO_USERMASTER_DTO.apply(dm).get()).collect(Collectors.toList());
 
 	

@@ -95,6 +95,7 @@ public static final String ROLE = BASE + "role" + SEPERATOR;
 public static final String GET_ROLES =SEPERATOR + "get-roles";
 public static final String GET_USER_ROLE= SEPERATOR + "get-role/{id}";
 public static final String UPDATE_USER_ROLE = SEPERATOR + "update-role/{id}";
+public static final String GET_USERS_BY_ROLE = SEPERATOR + "getuser-byrole/{id}";
 
 
 }
