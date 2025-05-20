@@ -39,7 +39,7 @@ public static final String UPLOAD_OTHER_DOCUMENT = SEPERATOR+"upload-other";
 public static final String RETRIVE_DOCS = SEPERATOR+"retirveDocs";
 public static final String RETRIVE_PROFILE_PHOTO=SEPERATOR+"profile-picture/{id}";
 public static final String UPDATE_PERSONAL_DETAILS=SEPERATOR+"update-profile";
-public static final String RETRIVE_PROFILE_DETAILS=SEPERATOR+"profile-details/{id}";
+public static final String RETRIVE_PROFILE_DETAILS=SEPERATOR+"profile-details";
 
 public static final String UPDATE_ADDRESS=SEPERATOR+"update_address";
 public static final String UPDATE_GAURDIAN_DETAILS=SEPERATOR+"update-gaurdian";

@@ -156,12 +156,12 @@ public class UserMasterServiceImpl implements UserMasterService {
 		existingUser.setBloodGroup(userDto.getBloodGroup());
 		existingUser.setBirthDate(userDto.getBirthDate());
 		existingUser.setBloodGroup(userDto.getBloodGroup());
-
-		Set<Role> updatedRoles = new HashSet<>(roleRepo.findAllById(userDto.getRoleIds()));
-		if (updatedRoles.isEmpty()) {
-			throw new ResourceNotFound("Roles");
-		}
-		existingUser.setRoles(updatedRoles);
+//
+//		Set<Role> updatedRoles = new HashSet<>(roleRepo.findAllById(userDto.getRoleIds()));
+//		if (updatedRoles.isEmpty()) {
+//			throw new ResourceNotFound("Roles");
+//		}
+//		existingUser.setRoles(updatedRoles);
 
 		UserMaster savedUser = userMasterRepo.save(existingUser);
 

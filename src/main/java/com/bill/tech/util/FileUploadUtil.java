@@ -73,7 +73,9 @@ public class FileUploadUtil {
 	            byte[] documentBytes = document.getData();
 	            HttpHeaders headers = new HttpHeaders();
 	            headers.setContentType(MediaType.parseMediaType(document.getFileType()));
-	            headers.setContentDisposition(ContentDisposition.inline().filename(document.getFileName()).build());
+	            headers.setContentDisposition(ContentDisposition.inline()
+	                .filename(document.getFileName())
+	                .build());
 
 	            return new ResponseEntity<>(documentBytes, headers, HttpStatus.OK);
 	        } else {

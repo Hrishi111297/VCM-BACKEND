@@ -9,9 +9,11 @@ import static com.bill.tech.constants.ApiConstants.PROFILE;
 import static com.bill.tech.constants.ApiConstants.*;
 import static com.bill.tech.constants.ApiConstants.UPDATE_PERSONAL_DETAILS;
 import static com.bill.tech.constants.ApiConstants.UPLOAD_PROFILE;
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static com.bill.tech.constants.ApiConstants.UPDATE_EDUCATION_DETAILS;
 import static com.bill.tech.constants.ApiConstants.RETRIVE_DOCS;
 import static com.bill.tech.constants.ApiConstants.UPLOAD_OTHER_DOCUMENT;
+import static java.util.Objects.nonNull;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bill.tech.entity.UserMaster;
 import com.bill.tech.marker.UpdateValidation;
 import com.bill.tech.payload.request.AddressDto;
 import com.bill.tech.payload.request.EducationDto;
@@ -104,8 +107,14 @@ public class ProfileController {
 	}
 	
 	@GetMapping(RETRIVE_PROFILE_DETAILS)
-	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>>getProfileData(@PathVariable Long id){
-		return userMasterService.getUserProfile(id);
+	public ResponseEntity<EnumMap<com.bill.tech.enums.ApiResponseEnum, Object>>getProfileData(){
+		  UserMaster details =null;
+	
+		 if (nonNull(getContext()) && nonNull(getContext().getAuthentication())
+		            && getContext().getAuthentication().getPrincipal() instanceof UserMaster) {
+		        details = (UserMaster) getContext().getAuthentication().getPrincipal();
+		
 	}
-
-}
+		 return userMasterService.getUserProfile( details.getId());
+}}
+	

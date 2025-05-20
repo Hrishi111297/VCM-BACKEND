@@ -76,8 +76,8 @@ public class UserMasterDataRequestDto {
 	    
 	    
 	    
-	    @NotNull(groups = {UpdateValidation.class})
-	    @NotEmpty(groups = {UpdateValidation.class}, message = "At least one role is required for update")
+	  //  @NotNull(groups = {UpdateValidation.class})
+	 //   @NotEmpty(groups = {UpdateValidation.class}, message = "At least one role is required for update")
 	    @Size(min = 1, message = "At least one role must be provided", groups = {CreateValidation.class, UpdateValidation.class})
 	    private Set<Long> roleIds; // IDs of the roles to assign
 }
